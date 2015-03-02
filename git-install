@@ -1,0 +1,58 @@
+# 1.aptitude安装
+
+# Ubuntu
+sudo aptitude install git
+sudo aptitude install git-doc git-svn git-email git-gui gitk
+
+# redhat
+yum install git
+yum install git-svn git-email git-gui gitk
+
+# 2.源码安装
+
+# 下载源码包
+url http://git-scm.com
+download git-1.7.4.1.tar.bz2
+# 解包
+tar -jxvf git-1.7.4.1.tar.bz2
+cd git-1.7.4.1
+# 配置git安装目录到 /usr/local/bin/下，并安装
+make prefix=/usr/local all
+sudo make prefix=/usr/local install
+# 安装 git doc
+make prefix=/usr/local doc info
+sudo make prefix=/usr/local install-doc install-html install-info
+# 安装完毕后可查看git的安装位置
+which git
+/usr/local/bin/git
+
+# 3.git版本库安装
+# 克隆git版本库到本地
+git clone git://git.kernel.org/pub/scm/git/git.git
+cd git
+# 若已经在本地存在git版本库，可以拉取最新版本
+git fetch
+# 清除之前编译的遗留文件，并恢复到最新版本
+git clean -fdx
+git reset --hard
+# 查看git里程碑
+git tag
+# 检出需要安装的git版本
+git checkout 1.7.4.1
+# 安装git到/usr/local/bin/目录下
+make prefix=/usr/local all
+sudo make prefix=/usr/local install
+
+# 4.命令补齐
+# 复制命令补齐脚本
+cp contrib/completion/git-completion.bash /etc/bash_completion.d/
+. /etc/bash_completion
+# 将如下脚本加入配置文件 /etc/profile 和 ~/.bashrc，在终端开启时自动加载
+if [ -f /etc/bash_completion ]; then
+	. /etc/bash_completion
+fi
+
+# 5.中文支持
+# linux使用utf8字符集，中文文件名不能正常显示，执行如下命令支持中文文件名
+git config --global core.quotepath false
+
