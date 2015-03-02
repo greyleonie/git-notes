@@ -1,0 +1,27 @@
+# 1.配置用户
+git config --global user.name "your name"
+git config --global user.email "your email"
+
+# 2.配置别名
+git config --global alias.st "status"
+git config --global alias.ci "commit -s"
+git config --global alias.co "checkcout"
+git config --global alias.br "branch"
+git config --global alias.glog "log --graph"
+
+# 3.开启颜色显示
+git config --global color.ui true
+
+# 4.中文支持
+# linux使用utf8字符集，中文文件名不能正常显示，执行如下命令支持中文文件名
+git config --global core.quotepath false
+
+# 5.--system,--global,.git的区别
+# --system代表系统级配置文件，通常在/etc下，优先级最低。
+git config -e --system
+# --global代表全局配置文件，在用户主目录下，优先级次高。
+git config -e --global
+# .git/config是版本库级配置文件，在版本库中，优先级最高。
+git config -e
+# 通常使用--global进行全局配置
+
