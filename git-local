@@ -1,0 +1,15 @@
+# 1.diff
+# 工作区与暂存区比较
+git diff
+# 暂存区与HEAD比较
+git diff --cached
+# 工作区与HEAD版本库比较
+git diff HEAD
+# 工作区与里程碑比较
+git diff tag-A
+# 里程碑与里程碑比较
+git diff tag-A tag-B
+# 暂存区与里程碑比较
+git diff --cached tag-A
+# 逐词比较
+git diff --word-diff
