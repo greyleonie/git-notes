@@ -1,4 +1,4 @@
-# 1.diff
+# 1.git diff
 # 工作区与暂存区比较
 git diff
 # 暂存区与HEAD比较
@@ -13,3 +13,14 @@ git diff tag-A tag-B
 git diff --cached tag-A
 # 逐词比较
 git diff --word-diff
+
+# 2.git reset
+# 复位的三个操作
+# (1) 替换分支引用：分支引用指向命令所指定的提交
+# (2) 替换暂存区：用分支引用所指向提交的目录树替换暂存区
+# (3) 替换工作区：用暂存区的内容替换工作区
+# 硬复位--hard：执行以上3个操作
+git reset --hard HEAD
+git reset --hard HEAD
+git reset --hard tag-A
+git reset -- <paths> 
