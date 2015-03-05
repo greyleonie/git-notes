@@ -1,4 +1,4 @@
-# 1.配置用户
+﻿# 1.配置用户
 git config --global user.name "your name"
 git config --global user.email "your email"
 
@@ -15,6 +15,27 @@ git config --global color.ui true
 # 4.中文支持
 # linux使用utf8字符集，中文文件名不能正常显示，执行如下命令支持中文文件名
 git config --global core.quotepath false
+
+# windows
+# 参考：http://www.2cto.com/os/201308/232968.html
+#	http://my.oschina.net/lujian863/blog/168837
+# (1)使用 git add 命令添加文件名含中文字符的文件时乱码
+# 类似：\316\304\261\276\316\304\265\265.txt
+# 编辑C:\Git\etc\inputrc文件，修改如下两行
+set output-meta on
+set convert-meta off
+
+# (2)使用git log查看含有中文的log信息时乱码
+# 类似：<E4><BF><AE><E6><94><B9><E6><96><87><E6><9C><AC><E6><96><87><E6><A1><A3>
+git config --global core.quotepath false
+
+# (3)使用使用ls命令查看含有中文的文件名乱码
+# 编辑C:\Git\etc\git-completion.bash文件，增加一行
+alias ls='ls --show-control-chars --color=auto'
+
+# (4)在Git Gui中查看UTF-8编码的文本文件时乱
+# 类似： 锘夸腑鏂囨枃妗￡
+git config --global gui.encoding utf-8
 
 # 5.--system,--global,.git的区别
 # --system代表系统级配置文件，通常在/etc下，优先级最低。
