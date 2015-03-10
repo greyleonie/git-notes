@@ -15,12 +15,47 @@ git diff --cached tag-A
 git diff --word-diff
 
 # 2.git reset
+# reset的参数默认值是HEAD，一般用于重置暂存区
 # 复位的三个操作
 # (1) 替换分支引用：分支引用指向命令所指定的提交
 # (2) 替换暂存区：用分支引用所指向提交的目录树替换暂存区
 # (3) 替换工作区：用暂存区的内容替换工作区
-# 硬复位--hard：执行以上3个操作
-git reset --hard HEAD
+# 硬复位--hard:执行以上3个操作
 git reset --hard HEAD
 git reset --hard tag-A
 git reset -- <paths> 
+# 软复位--soft:执行以上第1个操作
+git reset --soft HEAD^
+# 混合复位--mixed：执行第1,2个操作，是reset命令的默认操作
+git reset == git reset HEAD
+# 将文件撤出暂存区，相当于git add filename的反向操作
+git reset -- filename == !(git add filename)
+
+# 3.git checkout
+# checkout的参数默认值是暂存区，一般用于覆盖工作区
+# 用法一：覆盖工作区，相当于取消git add filename之后对工作区所做的修改，慎用！
+git checkout -- filename 
+# 用branch分支提交中的filename直接覆盖暂存区和工作区，慎用！
+git checkout branch -- filename
+# 用暂存区覆盖工作区内容，慎用！
+git checkout --
+git checkout .
+# 用法二：汇总显示工作区，暂存区和HEAD的差异
+git checkout == git checkout HEAD
+# 用法三：改变HEAD指针，切换到某个分支
+git checkout branch
+# 用法四：创建分支
+git checkout -b <new_branch>
+
+# 4.git log
+# 图形化显示版本日志，一行显示，统计信息，显示前3行，显示指针
+git log --graph --oneline --stat -3 --decorate
+ == git log --graph --pretty=oneline --stat -3 --decorate
+
+# 5.git ignore
+# 文件忽略，将.gitignore文件放到工作目录下，将需要忽略的文件写入该文件
+cat .gitignore
+*.bak
+*.tmp
+out/
+.settings/
