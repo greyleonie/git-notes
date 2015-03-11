@@ -59,3 +59,9 @@ cat .gitignore
 *.tmp
 out/
 .settings/
+
+# 6.git blame 文件追溯
+git blame filename
+# 查看某几行
+git blame -L 5,+3 filename
+# 查看filename的修改记录，从第5行开始显示3行
