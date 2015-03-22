@@ -1,0 +1,266 @@
+#
+# 1. 安装git
+#
+# 1.1 aptitude安装
+# Ubuntu
+sudo aptitude install git
+sudo aptitude install git-doc git-svn git-email git-gui gitk
+# redhat
+yum install git
+yum install git-svn git-email git-gui gitk
+
+# 1.2 源码安装
+# 下载源码包
+url http://git-scm.com
+download git-1.7.4.1.tar.bz2
+# 解包
+tar -jxvf git-1.7.4.1.tar.bz2
+cd git-1.7.4.1
+# 配置git安装目录到 /usr/local/bin/下安装
+make prefix=/usr/local all
+sudo make prefix=/usr/local install
+# 安装 git doc
+make prefix=/usr/local doc info
+sudo make prefix=/usr/local install-doc install-html install-info
+# 安装完毕后可查看git的安装位置
+which git
+/usr/local/bin/git
+
+# 1.3 git版本库安装
+# 克隆git版本库到本地
+git clone git://git.kernel.org/pub/scm/git/git.git
+cd git
+# 若已经在本地存在git版本库，可以拉取最新版本
+git fetch
+# 清除之前编译的遗留文件，并恢复到最新版本
+git clean -fdx
+git reset --hard
+# 查看git里程碑
+git tag
+# 检出需要安装的git版本
+git checkout 1.7.4.1
+# 安装git到/usr/local/bin/目录下
+make prefix=/usr/local all
+sudo make prefix=/usr/local install
+
+#
+# 2. 配置git
+#
+# 2.1 命令补齐
+# 可配置git命令按Tab键自动补齐，windows安装不需配置。
+# 复制命令补齐脚本
+cp contrib/completion/git-completion.bash /etc/bash_completion.d/
+. /etc/bash_completion
+# 将如下脚本加入配置文件 /etc/profile 和 ~/.bashrc，在终端开启时自动加载
+if [ -f /etc/bash_completion ]; then
+	. /etc/bash_completion
+fi
+
+﻿# 2.2 配置用户
+git config --global user.name "your name"
+git config --global user.email "your email"
+
+# 2.3 配置别名
+# 简化命令操作
+git config --global alias.st "status"
+git config --global alias.ci "commit -s"
+git config --global alias.co "checkcout"
+git config --global alias.br "branch"
+git config --global alias.glog "log --graph"
+
+# 2.4 开启颜色显示
+# linux系统配置该项可在shell的git命令输出中开启颜色显示。
+git config --global color.ui true
+
+# 2.5 中文支持
+# linux系统使用utf8字符集，中文文件名不能正常显示，执行如下命令支持中文文件名
+git config --global core.quotepath false
+#
+# windows系统
+# 参考：http://www.2cto.com/os/201308/232968.html
+#	http://my.oschina.net/lujian863/blog/168837
+# (1)使用 git add 命令添加文件名含中文字符的文件时乱码
+# 类似：\316\304\261\276\316\304\265\265.txt
+# 编辑C:\Git\etc\inputrc文件，修改如下两行
+set output-meta on
+set convert-meta off
+#
+# (2)使用git log查看含有中文的log信息时乱码
+# 类似：<E4><BF><AE><E6><94><B9><E6><96><87><E6><9C><AC><E6><96><87><E6><A1><A3>
+git config --global core.quotepath false
+#
+# (3)使用使用ls命令查看含有中文的文件名乱码，文件夹未显示为蓝色
+# 编辑C:\Git\etc\git-completion.bash文件，增加一行
+alias ls='ls --show-control-chars --color=auto'
+
+# (4)在Git Gui中查看UTF-8编码的文本文件时乱
+# 类似： 锘夸腑鏂囨枃妗￡
+git config --global gui.encoding utf-8
+
+# 2.6 --system,--global,.git的区别
+# --system代表系统级配置文件，通常在/etc下，优先级最低。
+git config -e --system
+# --global代表全局配置文件，在用户主目录下，优先级次高。
+git config -e --global
+# .git/config是版本库级配置文件，在版本库中，优先级最高。
+git config -e
+# 通常使用--global进行全局配置，用.git进行针对某个版本库的配置。
+
+#
+# 3. 日常操作
+#
+
+# 3.1 git初始化 
+# 3.1.1 创建版本库
+# 进入工作目录workspace，执行git init命令后，将在demo目录下创建版本库，生成.git/文件夹。
+cd ~/workspace
+mkdir demo
+cd demo
+git init
+
+# 3.1.2 创建裸版本库
+# 裸版本库通常用于同步备份版本库信息
+cd ~
+git init --bare repository.git
+# 将在用户主目录下创建名为repository.git的文件夹作为裸版本库。
+
+# 3.2 查看状态
+git status
+# 查看当前工作区状态，精简输出
+git status -s
+
+# 3.3 查看版本库日志
+git log
+# 分支图显示
+git log --graph
+# 一行简化显示
+git log --oneline
+# 显示最近的3条日志
+git log -3 --oneline
+# 显示每条日志的具体改动，美观输出
+git log -p 
+# 显示每条日志的统计概要
+git log --stat
+# 显示提交所关联的引用指针
+git log --decorate 
+# 常用组合
+git log --graph -5 --oneline --decorate
+git log --graph -3 --stat
+# 查看某个提交的详细信息
+git show <commit> 
+# 查看某个提交的对象文件内容
+git cat-file -p <commit>
+
+# 3.4 差异比较
+# 默认比较工作区和暂存区的差异
+git diff
+# 比较工作区和HEAD版本差异
+git diff HEAD
+# 比较工作区和里程碑A的差异
+git diff A
+# 比较暂存区和HEAD版本差异
+git diff --cached
+# 比较暂存区和里程碑A的差异
+git diff --cached A
+# 比较里程碑A和里程碑B的差异
+git diff A B
+# 比较任意两个文件的差异
+git diff pathA/fileA pathA/fileB
+# 比较任意两个文件夹下文件的差异
+git diff pathA/ pathB/
+
+# 3.5 添加文件到暂存区
+git add file
+# 将被版本库追踪的工作区文件的修改和删除添加到暂存区，不包括新增的文件。
+git add -u
+# 将工作区中所有改动和新增的文件添加到暂存区
+git add -A
+# 交互式界面选择性添加文件到暂存区
+git add -i
+
+# 3.6 重置
+# 默认使用HEAD版本重置暂存区，工作区内容不受影响。
+# 用于撤销之前使用git add命令添加到暂存区中的内容。
+git reset
+# 混合重置
+# 使用<commit>提交的内容重置暂存区，工作区内容不受影响。
+git reset [--mixed] <commit>
+# 硬重置
+# 使用<commit>提交的内容重置暂存区和工作区。
+git reset --hard <commit>
+# 软重置
+# 将引用指向<commit>提交，并不改变暂存区和工作区的内容。
+git reset --soft <commit>
+
+# 3.6.1 深入理解reset
+# git reset命令用于在该分支的各个历史提交对象之间切换。
+# 当前分支指针(master)只指向一个当前提交<commit>对象。
+# 在reset操作中，版本库头指针(HEAD)始终指向当前分支指针(master)不变。
+#
+#	workspace	|				repository
+#------------------------------------------------------------------
+#				|	cache	|			HEAD-->master
+#	dir			|	dir		|						\		
+#	|-file1		|	|-file1	|	commit1				commit2
+#	|-file2		|	|-file2	|	tree->dir			tree->dir
+#				|			|			|-file1				|-file1		
+#				|			|			|-file2				|-file2	
+#
+# --soft
+# 执行git reset --soft <commit>时，当前分支指针(master)指向该<commit>对象，
+# 暂存区(cache)和工作区(workspace)的内容不受影响。
+# [--mixed]
+# 执行git reset [--mixed] <commit>时，当前分支指针(master)指向该<commit>对象，
+# 使用<commit>对象目录树(tree)中的内容(dir)替换暂存区(cache)的内容(dir)。
+# 但工作区(workspace)中的内容不变。
+# --hard
+# 执行git reset --hard <commit>时，当先分支指针(master)指向该<commit>对象，
+# 使用<commit>对象目录树(tree)中的内容(dir)替换暂存区(cache)和工作区(workspace)中的内容(dir)。
+# 
+ 
+# 3.7 提交
+# 将暂存区中的内容提交到版本库
+git commit -m "xxx"
+# 空提交
+git commit --allow-empty -m "xxx"
+# 提交所有工作区中变更的文件，但无法通过add和reset对提交内容进行控制，慎用！
+git commit -a
+
+# 3.8 检出
+# 汇总显示工作区，暂存区和HEAD之间的差异
+git checkout
+# 切换当前分支
+git checkout <branch>
+# 创建分支，并切换到新分支
+git checkout -b <new_branch>
+# 用暂存区中的内容覆盖工作区的相应文件
+git checkout -- <paths>
+# 用暂存区的所有内容直接覆盖工作区，极度危险，慎用！
+git checkout -- . 
+git checkout .
+# 用指定提交<commit>的文件覆盖工作区的文件<paths>
+git checkout <commit> -- <paths>
+
+# 3.8.1 深入理解checkout
+# checkout命令主要为2个用法，一个是切换当前分支，另一个是覆盖工作区文件。
+#
+#	workspace	|				repository
+#------------------------------------------------------------------
+#				|	cache	|			HEAD-->master
+#	dir			|	dir		|						\		
+#	|-file1		|	|-file1	|	commit1				commit2
+#	|-file2		|	|-file2	|	tree->dir			tree->dir
+#				|			|			|-file1				|-file1		
+#				|			|			|-file2				|-file2	
+
+
+
+# 3.2 git克隆
+# 克隆远程版本库
+# 3.2.1 ssh协议
+git clone [user@]example.com:path/to/repo.git
+git clone git@10.10.8.102:/repository.git/demo.git
+# git协议格式
+git clone git://example.com[:port]/path/to/repo.git
+git clone git://10.10.8.102/repository.git/demo.git
+
