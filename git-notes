@@ -303,28 +303,74 @@ git tag <tagname> [<commit>]
 # 创建带说明的里程碑，创建新的里程碑对象，有记录，建议使用。
 git tag -a <tagname> [<commit>]
 git tag -m <msg> <tagname> [<commit>]
-# 创建带GnuPG签名的里程碑
+# 创建带GnuPG签名的里程碑 
 git tag -s <tagname> [<commit>]
 # 用私钥进行签名，创建带GnuPG签名的里程碑
 git tag -u <key-id> <tagname> [<commit>]
 
-# 3.13 远程库
-
-# 3.14 克隆
-git clone <url>
+# 3.13 协议
 # ssh协议
-git clone [user@]<server>:/path/to/repo.git
-git clone ssh://[user@]<server>[:<port>]/path/to/repo.git
-git clone git@10.10.8.102:/repository/demo.git
+[user@]<server>:/path/to/repo.git
+ssh://[user@]<server>[:<port>]/path/to/repo.git
 # git协议
-git clone git://<server>[:<port>]/path/to/repo.git
+git://<server>[:<port>]/path/to/repo.git
+# 本地协议
+file:///path/to/repo.git
+/path/to/repo.git(采用硬连接实现克隆，不支持浅克隆)
+# http[s]协议
+http[s]://<server>[:<port>]/path/to/repo.git
+# ftp[s]协议(哑协议)
+ftp[s]://<server>[:<port>]/path/to/repo.git
+# rsync协议(哑协议)
+rsync://<server>[:<port>]/path/to/repo.git
+
+# 3.14 远程库
+# 显示已经注册的远程库
+git remote -v 
+# 注册远程库
+git remote add remote-name <url>
+# 更新所有远程版本库
+git remote update 
+# 删除远程版本库
+git remote rm remote-name
+
+# 3.15 克隆
+git clone <url>
+# ssh克隆
+git clone git@10.10.8.102:/repository/demo.git
+# git协议克隆
 git clone git://10.10.8.102/repository/demo.git
+# 本地克隆
+git clone file:///data/repository/demo.git
 
-# 3.15 拉取
-git pull 
+# 3.16 拉取
+# git pull = git fetch + git merge
+git pull <remote> <branch> 
+# 若<branch>不是当前分支，则自动合并当前分支和远程分支。
 
-# 3.16 推送
-git push
+# 3.17 推送
+git push <remote> <branch>
+# 在远程版本库创建分支
+git push <remote> <new_branch>
+# 禁止非快进式推送，避免造成不必要的冲突
+git config --global receive.denyNonFastForwards true
 
+#
+# 4. 高级操作
+#
+
+# 4.1 查看对象
+# 查看对象类型
+git cat-file -t <file>
+# 查看对象内容
+git cat-file -p <file>
+
+# 4.2 引用转换
+git rev-parse 
+# 查看引用的哈希值
+git rev-parse HEAD
+
+# 4.3 查看操作记录
+git reflog -n
 
 
